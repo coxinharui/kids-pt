@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TV Kids PT-PT</title>
+  <title>TV Kids PT-PT v2</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       background-color: #121212;
       color: white;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
+      height: 100dvh;
     }
     header {
       background-color: #1f1f1f;
@@ -23,89 +23,73 @@
       align-items: center;
       border-bottom: 2px solid #ffcc00;
     }
-    h1 {
-      font-size: 18px;
-      margin: 0;
-      color: #ffcc00;
-    }
+    h1 { font-size: 16px; margin: 0; color: #ffcc00; }
     .canais {
       display: flex;
       gap: 8px;
       padding: 10px;
       overflow-x: auto;
       background: #1a1a1a;
-      -webkit-overflow-scrolling: touch;
     }
     button {
       background-color: #2c2c2c;
       color: white;
       border: 2px solid #444;
       border-radius: 20px;
-      padding: 10px 16px;
+      padding: 8px 14px;
       font-size: 14px;
       font-weight: bold;
       white-space: nowrap;
-      cursor: pointer;
     }
     button.ativo {
       background-color: #ffcc00;
       color: #000;
       border-color: #ffcc00;
     }
-    #player-container {
+    #player-box {
       flex: 1;
-      position: relative;
       width: 100%;
       background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     iframe {
       width: 100%;
       height: 100%;
-      border: none;
-    }
-    #escudo-topo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 55px;
-      z-index: 10;
-      background: transparent;
+      border: 0;
     }
     .controles {
       padding: 12px;
       display: flex;
       justify-content: center;
-      gap: 15px;
       background: #1f1f1f;
     }
     .btn-next {
       background-color: #00a859;
       border-color: #00a859;
       font-size: 16px;
-      padding: 12px 28px;
+      padding: 12px 24px;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🇵🇹 TV Kids Segura</h1>
-    <span style="font-size: 12px; color: #aaa;">Modo PT-PT</span>
+    <h1>🇵🇹 TV Kids PT-PT</h1>
+    <span style="font-size: 12px; color: #00a859;">● Versão 2</span>
   </header>
 
   <div class="canais">
-    <button class="ativo" onclick="mudarCanal('PL6Nz8kJ8yTb8R4hKGj68qmPESdPcJOzmH', this)">🐼 Panda e os Caricas</button>
-    <button onclick="mudarCanal('PL9GazwN4CvQ0Ksa4pFy2I3dWTE_mxzQNX', this)">🎸 Prof. Idalécio</button>
-    <button onclick="mudarCanal('PL6Nz8kJ8yTb83RvT2OMe1p6bFDk_7racV', this)">🎀 Nina Toc Toc</button>
-    <button onclick="mudarCanal('PLWQVAYRzFnXMmKTjW1L_ofLE22ctWytot', this)">🎵 Músicas Panda</button>
+    <button class="ativo" onclick="selecionarCanal('panda', this)">🐼 Panda e os Caricas</button>
+    <button onclick="selecionarCanal('idalecio', this)">🎸 Prof. Idalécio</button>
+    <button onclick="selecionarCanal('nina', this)">🎀 Nina Toc Toc</button>
   </div>
 
-  <div id="player-container">
-    <div id="escudo-topo"></div>
-    <iframe id="youtube-frame"
-      src="https://youtube.com"
-      allow="autoplay; encrypted-media; fullscreen"
+  <div id="player-box">
+    <iframe id="video-frame"
+      src="https://youtube-nocookie.com"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen>
     </iframe>
   </div>
@@ -115,26 +99,45 @@
   </div>
 
   <script>
-    var playlistAtual = 'PL6Nz8kJ8yTb8R4hKGj68qmPESdPcJOzmH';
-    var indiceAtual = 0;
+    // Listas fechadas de IDs de vídeos oficiais em PT-PT
+    const listas = {
+      panda: [
+        '761ae_KDg_Q', // Panda e os Caricas - Sou uma Taça
+        'yM96pS2S2-U', // Panda e os Caricas - Pinguim
+        '1X2t7t5wS9A', // Panda e os Caricas - A Loja do Mestre André
+        'R_M-7X2N6G4'  // Panda e os Caricas - Dona Aranha
+      ],
+      idalecio: [
+        'b-S8u1p62aA', // Prof. Idalécio - O Comboio
+        'g-u4vR-n1A8', // Prof. Idalécio - Canções infantis
+        'kX8c0J9vN3M'  // Prof. Idalécio - Música PT
+      ],
+      nina: [
+        'q3K5d2N8wL4', // Nina Toc Toc - Canção
+        'm9P4v7R2xQ1'  // Nina Toc Toc - Infantil PT
+      ]
+    };
 
-    function mudarCanal(playlistId, botaoClicado) {
-      document.querySelectorAll('.canais button').forEach(btn => btn.classList.remove('ativo'));
-      botaoClicado.classList.add('ativo');
+    let canalAtual = 'panda';
+    let indice = 0;
 
-      playlistAtual = playlistId;
-      indiceAtual = 0;
-      atualizarIframe();
+    function selecionarCanal(canal, botao) {
+      document.querySelectorAll('.canais button').forEach(b => b.classList.remove('ativo'));
+      botao.classList.add('ativo');
+      canalAtual = canal;
+      indice = 0;
+      carregarVideo();
     }
 
     function proximoVideo() {
-      indiceAtual++;
-      atualizarIframe();
+      indice = (indice + 1) % listas[canalAtual].length;
+      carregarVideo();
     }
 
-    function atualizarIframe() {
-      var frame = document.getElementById('youtube-frame');
-      frame.src = "https://youtube.com" + playlistAtual + "&index=" + indiceAtual + "&autoplay=1&rel=0&playsinline=1&hl=pt-PT";
+    function carregarVideo() {
+      const videoId = listas[canalAtual][indice];
+      const frame = document.getElementById('video-frame');
+      frame.src = `https://youtube-nocookie.com{videoId}?autoplay=1&rel=0&playsinline=1`;
     }
   </script>
 </body>
