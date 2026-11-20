@@ -2,147 +2,41 @@
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TV Kids PT-PT</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background-color: #121212;
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-    }
-    header {
-      background-color: #1f1f1f;
-      padding: 10px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #ffcc00;
-    }
-    h1 { font-size: 16px; margin: 0; color: #ffcc00; }
-    .canais {
-      display: flex;
-      gap: 8px;
-      padding: 10px;
-      overflow-x: auto;
-      background: #1a1a1a;
-      -webkit-overflow-scrolling: touch;
-    }
-    button {
-      background-color: #2c2c2c;
-      color: white;
-      border: 2px solid #444;
-      border-radius: 20px;
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: bold;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-    button.ativo {
-      background-color: #ffcc00;
-      color: #000;
-      border-color: #ffcc00;
-    }
-    #player-box {
-      flex: 1;
-      width: 100%;
-      background: #000;
-      position: relative;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-    .controles {
-      padding: 12px;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      background: #1f1f1f;
-    }
-    .btn-next {
-      background-color: #00a859;
-      border-color: #00a859;
-      font-size: 16px;
-      padding: 12px 24px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>TV Kids PT-PT v5</title>
 </head>
-<body>
+<body style="background:#111; color:white; font-family:sans-serif; margin:0; padding:15px; text-align:center;">
 
-  <header>
-    <h1>🇵🇹 TV Kids PT-PT</h1>
-    <span style="font-size: 12px; color: #00a859;">● Canais Reais</span>
-  </header>
+  <h2 style="color:#ffcc00; margin-top:0;">🇵🇹 TV Kids PT-PT (v5)</h2>
 
-  <div class="canais">
-    <button class="ativo" onclick="selecionarCanal('panda', this)">🐼 Panda e os Caricas</button>
-    <button onclick="selecionarCanal('idalecio', this)">🎸 Prof. Idalécio</button>
-    <button onclick="selecionarCanal('nina', this)">🎀 Nina Toc Toc</button>
-    <button onclick="selecionarCanal('vkids', this)">🐥 V Kids</button>
+  <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:15px;">
+    <button onclick="mudar('ybN2N_hAf1M')" style="padding:10px; border-radius:10px; background:#ffcc00; border:none; font-weight:bold;">🐼 Panda</button>
+    <button onclick="mudar('iezjtKchChE')" style="padding:10px; border-radius:10px; background:#00a859; color:white; border:none; font-weight:bold;">🎸 Idalécio</button>
+    <button onclick="mudar('DROBhivPdz4')" style="padding:10px; border-radius:10px; background:#e91e63; color:white; border:none; font-weight:bold;">🎀 Nina</button>
+    <button onclick="mudar('M7lc1UVf-VE')" style="padding:10px; border-radius:10px; background:#2196f3; color:white; border:none; font-weight:bold;">🧪 Teste YouTube</button>
   </div>
 
-  <div id="player-box">
-    <iframe id="video-frame"
+  <div style="width:100%; max-width:600px; margin:0 auto; aspect-ratio:16/9; background:#222; border:2px solid #444;">
+    <iframe id="player"
+      style="width:100%; height:100%; border:0;"
       src="https://youtube.com"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       allowfullscreen>
     </iframe>
   </div>
 
-  <div class="controles">
-    <button class="btn-next" onclick="proximoVideo()">⏭️ Próximo Vídeo</button>
-  </div>
+  <p id="status" style="color:#aaa; font-size:13px; margin-top:10px;">A mostrar: Vídeo de Teste Oficial</p>
 
   <script>
-    // IDs reais verificados dos canais oficiais PT-PT
-    const listas = {
-      panda: [
-        'ybN2N_hAf1M', // Panda e os Caricas - Dança Panda
-        'enLZo_rALI4', // Panda e os Caricas - Em Festa
-        'CFZkJYFgwXI'  // Panda e os Caricas - Sem Parar
-      ],
-      idalecio: [
-        'iezjtKchChE'  // Prof. Idalécio - Vamos Aprender!
-      ],
-      nina: [
-        'DROBhivPdz4', // Nina Toc Toc - Nina Toc Toc
-        'l8GmoZ1ZKKw'  // Nina Toc Toc - Dança Das Letras
-      ],
-      vkids: [
-        'ys-sWvIlxzE'  // V Kids (Vidisco Kids) - Vídeos Infantis PT
-      ]
-    };
-
-    let canalAtual = 'panda';
-    let indice = 0;
-
-    function selecionarCanal(canal, botao) {
-      document.querySelectorAll('.canais button').forEach(b => b.classList.remove('ativo'));
-      botao.classList.add('ativo');
-      canalAtual = canal;
-      indice = 0;
-      carregarVideo();
-    }
-
-    function proximoVideo() {
-      indice = (indice + 1) % listas[canalAtual].length;
-      carregarVideo();
-    }
-
-    function carregarVideo() {
-      const videoId = listas[canalAtual][indice];
-      const frame = document.getElementById('video-frame');
-      frame.src = `https://youtube.com{videoId}?autoplay=1&rel=0&playsinline=1&hl=pt-PT`;
+    function mudar(id) {
+      document.getElementById('player').src = 'https://youtube.com' + id + '?autoplay=1&playsinline=1';
+      document.getElementById('status').innerText = 'A carregar vídeo ID: ' + id;
     }
   </script>
 </body>
 </html>
+
 
 
