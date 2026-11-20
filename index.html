@@ -62,13 +62,12 @@
       height: 100%;
       border: none;
     }
-    /* Escudo transparente no topo para impedir cliques no título/logo do YouTube que levam para fora */
     #escudo-topo {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 60px;
+      height: 55px;
       z-index: 10;
       background: transparent;
     }
@@ -95,10 +94,10 @@
   </header>
 
   <div class="canais">
-    <button class="ativo" onclick="mudarCanal('PL94Lw_gOqol3hJ4GTyPAzCVpWP6QEuovO', this)">🐼 Panda e os Caricas</button>
+    <button class="ativo" onclick="mudarCanal('PL6Nz8kJ8yTb8R4hKGj68qmPESdPcJOzmH', this)">🐼 Panda e os Caricas</button>
     <button onclick="mudarCanal('PL9GazwN4CvQ0Ksa4pFy2I3dWTE_mxzQNX', this)">🎸 Prof. Idalécio</button>
     <button onclick="mudarCanal('PL6Nz8kJ8yTb83RvT2OMe1p6bFDk_7racV', this)">🎀 Nina Toc Toc</button>
-    <button onclick="mudarCanal('UU_g8wP5oE2_G-eS8q1sW_5Q', this)">🐥 V Kids PT</button>
+    <button onclick="mudarCanal('PLWQVAYRzFnXMmKTjW1L_ofLE22ctWytot', this)">🎵 Músicas Panda</button>
   </div>
 
   <div id="player-container">
@@ -111,14 +110,13 @@
   </div>
 
   <script>
-    // Carrega a API oficial do YouTube IFrame
     var tag = document.createElement('script');
     tag.src = "https://youtube.com";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     var player;
-    var playlistAtual = 'PL94Lw_gOqol3hJ4GTyPAzCVpWP6QEuovO'; // Começa com Panda e os Caricas
+    var playlistAtual = 'PL6Nz8kJ8yTb8R4hKGj68qmPESdPcJOzmH';
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
@@ -128,38 +126,41 @@
           listType: 'playlist',
           list: playlistAtual,
           autoplay: 1,
+          mute: 0,
           controls: 1,
-          rel: 0,           // Tenta limitar vídeos relacionados ao mesmo canal
+          rel: 0,
           modestbranding: 1,
-          playsinline: 1,   // Evita abrir o leitor nativo do iPhone fora da app
+          playsinline: 1,
           hl: 'pt-PT',
           cc_lang_pref: 'pt-PT'
         },
         events: {
           'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
+          'onStateChange': onPlayerStateChange,
+          'onError': onPlayerError
         }
       });
     }
 
     function onPlayerReady(event) {
-      event.target.setShuffle(true); // Baralha os vídeos para não repetir sempre a mesma ordem
-      event.target.playVideoAt(0);
+      event.target.playVideo();
     }
 
     function onPlayerStateChange(event) {
-      // Quando um vídeo termina (estado 0), força o próximo da playlist segura
       if (event.data === YT.PlayerState.ENDED) {
         player.nextVideo();
       }
     }
 
+    // Se algum vídeo da playlist tiver restrição de incorporação, salta logo para o seguinte
+    function onPlayerError(event) {
+      player.nextVideo();
+    }
+
     function mudarCanal(playlistId, botaoClicado) {
-      // Atualiza visual dos botões
       document.querySelectorAll('.canais button').forEach(btn => btn.classList.remove('ativo'));
       botaoClicado.classList.add('ativo');
 
-      // Carrega a nova playlist segura
       playlistAtual = playlistId;
       player.loadPlaylist({
         list: playlistAtual,
