@@ -34,13 +34,14 @@
       padding: 10px;
       overflow-x: auto;
       background: #1a1a1a;
+      -webkit-overflow-scrolling: touch;
     }
     button {
       background-color: #2c2c2c;
       color: white;
       border: 2px solid #444;
       border-radius: 20px;
-      padding: 8px 16px;
+      padding: 10px 16px;
       font-size: 14px;
       font-weight: bold;
       white-space: nowrap;
@@ -82,7 +83,7 @@
       background-color: #00a859;
       border-color: #00a859;
       font-size: 16px;
-      padding: 10px 24px;
+      padding: 12px 28px;
     }
   </style>
 </head>
@@ -102,7 +103,11 @@
 
   <div id="player-container">
     <div id="escudo-topo"></div>
-    <div id="player"></div>
+    <iframe id="youtube-frame"
+      src="https://youtube.com"
+      allow="autoplay; encrypted-media; fullscreen"
+      allowfullscreen>
+    </iframe>
   </div>
 
   <div class="controles">
@@ -110,68 +115,26 @@
   </div>
 
   <script>
-    var tag = document.createElement('script');
-    tag.src = "https://youtube.com";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-    var player;
     var playlistAtual = 'PL6Nz8kJ8yTb8R4hKGj68qmPESdPcJOzmH';
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '100%',
-        width: '100%',
-        playerVars: {
-          listType: 'playlist',
-          list: playlistAtual,
-          autoplay: 1,
-          mute: 0,
-          controls: 1,
-          rel: 0,
-          modestbranding: 1,
-          playsinline: 1,
-          hl: 'pt-PT',
-          cc_lang_pref: 'pt-PT'
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange,
-          'onError': onPlayerError
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      event.target.playVideo();
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.ENDED) {
-        player.nextVideo();
-      }
-    }
-
-    // Se algum vídeo da playlist tiver restrição de incorporação, salta logo para o seguinte
-    function onPlayerError(event) {
-      player.nextVideo();
-    }
+    var indiceAtual = 0;
 
     function mudarCanal(playlistId, botaoClicado) {
       document.querySelectorAll('.canais button').forEach(btn => btn.classList.remove('ativo'));
       botaoClicado.classList.add('ativo');
 
       playlistAtual = playlistId;
-      player.loadPlaylist({
-        list: playlistAtual,
-        listType: 'playlist'
-      });
+      indiceAtual = 0;
+      atualizarIframe();
     }
 
     function proximoVideo() {
-      if (player && player.nextVideo) {
-        player.nextVideo();
-      }
+      indiceAtual++;
+      atualizarIframe();
+    }
+
+    function atualizarIframe() {
+      var frame = document.getElementById('youtube-frame');
+      frame.src = "https://youtube.com" + playlistAtual + "&index=" + indiceAtual + "&autoplay=1&rel=0&playsinline=1&hl=pt-PT";
     }
   </script>
 </body>
