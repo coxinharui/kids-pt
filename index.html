@@ -2,7 +2,8 @@
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>TV Kids PT-PT</title>
   <style>
     * { box-sizing: border-box; }
@@ -11,153 +12,230 @@
       background-color: #121212;
       color: white;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      padding: 15px;
-      padding-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      overflow: hidden;
     }
     header {
-      text-align: center;
-      padding-bottom: 15px;
+      background-color: #1f1f1f;
+      padding: 8px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       border-bottom: 2px solid #ffcc00;
-      margin-bottom: 15px;
     }
-    h1 { font-size: 22px; margin: 0; color: #ffcc00; }
-    p { font-size: 13px; color: #aaa; margin: 5px 0 0; }
+    h1 { font-size: 16px; margin: 0; color: #ffcc00; }
+    
+    /* Área do Leitor Fixo no Topo */
+    #player-wrapper {
+      width: 100%;
+      aspect-ratio: 16/9;
+      max-height: 45vh;
+      background: #000;
+      position: relative;
+      flex-shrink: 0;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .barra-controlo {
+      background: #1a1a1a;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #333;
+    }
+    .btn-acao {
+      background: #00a859;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-externo {
+      background: #333;
+      color: #ffcc00;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Lista de Vídeos com Scroll */
+    .catalogo {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
     h2 {
-      font-size: 18px;
-      margin: 24px 0 12px;
-      color: #fff;
-      border-left: 4px solid #ffcc00;
-      padding-left: 10px;
+      font-size: 15px;
+      margin: 15px 0 8px;
+      color: #ffcc00;
+      border-left: 3px solid #ffcc00;
+      padding-left: 8px;
     }
+    h2:first-child { margin-top: 0; }
     .grelha {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
     }
     .cartao {
       background: #1f1f1f;
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
-      text-decoration: none;
-      color: white;
-      border: 1px solid #333;
-      display: flex;
-      flex-direction: column;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .cartao.ativo {
+      border-color: #ffcc00;
+      background: #2a2614;
     }
     .cartao img {
       width: 100%;
       aspect-ratio: 16/9;
       object-fit: cover;
-      background: #000;
+      display: block;
     }
     .cartao span {
-      padding: 10px;
-      font-size: 13px;
+      display: block;
+      padding: 8px;
+      font-size: 12px;
       font-weight: bold;
-      line-height: 1.3;
-    }
-    .aviso {
-      background: #1a2e22;
-      border: 1px solid #00a859;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      margin-bottom: 15px;
-      color: #d4f7e2;
+      line-height: 1.2;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🇵🇹 TV Kids Segura (PT-PT)</h1>
-    <p>Catálogo fechado • Zero recomendações PT-BR</p>
+    <h1>🇵🇹 TV Kids PT-PT</h1>
+    <span id="titulo-atual" style="font-size: 11px; color: #aaa; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DVD Prof. Idalécio</span>
   </header>
 
-  <div class="aviso">
-    💡 <strong>Dica para o Chromecast:</strong> Ao abrir o vídeo no YouTube, desliga o botão <strong>"Reprodução automática"</strong> no topo do vídeo para não saltar para vídeos brasileiros no final.
+  <div id="player-wrapper">
+    <iframe id="player"
+      src="https://youtube.com"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen>
+    </iframe>
   </div>
 
-  <h2>🐼 Panda e os Caricas</h2>
-  <div class="grelha">
-    <a class="cartao" href="https://www.youtube.com/watch?v=Tk3mNCwKkB8">
-      <img src="https://ytimg.com" alt="Quem Quer Pão">
-      <span>Quem Quer Pão?</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=CeujGNFkyIE">
-      <img src="https://ytimg.com" alt="Ginástica Com O Panda">
-      <span>Ginástica Com O Panda</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=0mhlhAZ4Hco">
-      <img src="https://ytimg.com" alt="A Cor Do Meu Carro">
-      <span>A Cor Do Meu Carro</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=HcKOE6zkzsM">
-      <img src="https://ytimg.com" alt="Panda Style">
-      <span>Panda Style (Ao Vivo)</span>
-    </a>
+  <div class="barra-controlo">
+    <button class="btn-acao" onclick="proximoVideo()">⏭️ Próximo Vídeo</button>
+    <a id="link-app" class="btn-externo" href="https://youtube.com" target="_blank">📺 Abrir na App YouTube</a>
   </div>
 
-  <h2>🎸 Professor Idalécio</h2>
-  <div class="grelha">
-    <a class="cartao" href="https://www.youtube.com/watch?v=9bbygHD2iqg">
-      <img src="https://ytimg.com" alt="DVD Completo">
-      <span>DVD Completo - Música Infantil PT</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=iezjtKchChE">
-      <img src="https://ytimg.com" alt="Vamos Aprender">
-      <span>Vamos Aprender! (ABC e Cores)</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=SmsJvhWqwkw">
-      <img src="https://ytimg.com" alt="Pra Começar o Dia">
-      <span>P'ra Começar o Dia</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=ZM6Uh_vtx4o">
-      <img src="https://ytimg.com" alt="Coelhinho">
-      <span>Coelhinho Vamos lá Brincar!</span>
-    </a>
+  <div class="catalogo" id="catalogo">
+    <!-- Os cartões são gerados automaticamente pelo script abaixo -->
   </div>
 
-  <h2>🎀 Nina Toc Toc</h2>
-  <div class="grelha">
-    <a class="cartao" href="https://www.youtube.com/watch?v=DROBhivPdz4">
-      <img src="https://ytimg.com" alt="Nina Toc Toc">
-      <span>Nina Toc Toc - Canção Oficial</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=l8GmoZ1ZKKw">
-      <img src="https://ytimg.com" alt="Dança Das Letras">
-      <span>Dança Das Letras</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=_MDNV7IFpxY">
-      <img src="https://ytimg.com" alt="Pato Teimoso">
-      <span>Pato Teimoso</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=rJIjrVCZJnc">
-      <img src="https://ytimg.com" alt="Roda Dos Alimentos">
-      <span>Roda Dos Alimentos</span>
-    </a>
-  </div>
+  <script>
+    const canais = [
+      {
+        nome: "🎸 Professor Idalécio",
+        videos: [
+          { id: "9bbygHD2iqg", titulo: "DVD Completo - Música Infantil PT" },
+          { id: "iezjtKchChE", titulo: "Vamos Aprender! (ABC e Cores)" },
+          { id: "SmsJvhWqwkw", titulo: "P'ra Começar o Dia" },
+          { id: "ZM6Uh_vtx4o", titulo: "Coelhinho Vamos lá Brincar!" }
+        ]
+      },
+      {
+        nome: "🐥 V Kids (Vidisco Kids PT)",
+        videos: [
+          { id: "TUtRv5T5WG0", titulo: "Pintainho Amarelinho - DVD 40 Min" },
+          { id: "wKwBXtde8jU", titulo: "Pintinho Piu (Vídeo Oficial PT)" },
+          { id: "S9fOBU1qDG0", titulo: "Todos Os Patinhos" },
+          { id: "IAxFXZdghSs", titulo: "Doidas Andam as Galinhas" }
+        ]
+      },
+      {
+        nome: "🐼 Panda e os Caricas",
+        videos: [
+          { id: "Tk3mNCwKkB8", titulo: "Quem Quer Pão?" },
+          { id: "CeujGNFkyIE", titulo: "Ginástica Com O Panda" },
+          { id: "0mhlhAZ4Hco", titulo: "A Cor Do Meu Carro" },
+          { id: "HcKOE6zkzsM", titulo: "Panda Style (Ao Vivo)" }
+        ]
+      },
+      {
+        nome: "🎀 Nina Toc Toc",
+        videos: [
+          { id: "DROBhivPdz4", titulo: "Nina Toc Toc - Canção Oficial" },
+          { id: "l8GmoZ1ZKKw", titulo: "Dança Das Letras" },
+          { id: "_MDNV7IFpxY", titulo: "Pato Teimoso" },
+          { id: "rJIjrVCZJnc", titulo: "Roda Dos Alimentos" }
+        ]
+      }
+    ];
 
-  <h2>🐥 V Kids (Vidisco Kids PT)</h2>
-  <div class="grelha">
-    <a class="cartao" href="https://www.youtube.com/watch?v=TUtRv5T5WG0">
-      <img src="https://ytimg.com" alt="DVD Completo 40 Min">
-      <span>Pintainho Amarelinho - DVD 40 Min</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=wKwBXtde8jU">
-      <img src="https://ytimg.com" alt="Pintinho Piu">
-      <span>Pintinho Piu (Vídeo Oficial PT)</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=S9fOBU1qDG0">
-      <img src="https://ytimg.com" alt="Todos Os Patinhos">
-      <span>Todos Os Patinhos</span>
-    </a>
-    <a class="cartao" href="https://www.youtube.com/watch?v=IAxFXZdghSs">
-      <img src="https://ytimg.com" alt="Doidas Andam as Galinhas">
-      <span>Doidas Andam as Galinhas</span>
-    </a>
-  </div>
+    let todosVideos = [];
+    let indiceAtual = 0;
 
+    function iniciarCatalogo() {
+      const container = document.getElementById('catalogo');
+      canais.forEach(canal => {
+        const h2 = document.createElement('h2');
+        h2.innerText = canal.nome;
+        container.appendChild(h2);
+
+        const grelha = document.createElement('div');
+        grelha.className = 'grelha';
+
+        canal.videos.forEach(video => {
+          const indexGlobal = todosVideos.length;
+          todosVideos.push(video);
+
+          const cartao = document.createElement('div');
+          cartao.className = 'cartao' + (indexGlobal === 0 ? ' ativo' : '');
+          cartao.id = 'card-' + indexGlobal;
+          cartao.onclick = () => tocarVideo(indexGlobal);
+
+          cartao.innerHTML = `
+            <img src="https://ytimg.com{video.id}/hqdefault.jpg" alt="${video.titulo}">
+            <span>${video.titulo}</span>
+          `;
+          grelha.appendChild(cartao);
+        });
+
+        container.appendChild(grelha);
+      });
+    }
+
+    function tocarVideo(index) {
+      indiceAtual = index;
+      const video = todosVideos[index];
+
+      // Atualiza destaque visual
+      document.querySelectorAll('.cartao').forEach(c => c.classList.remove('ativo'));
+      document.getElementById('card-' + index).classList.add('ativo');
+
+      // Atualiza leitor embutido e botão de reserva
+      document.getElementById('player').src = `https://youtube.com{video.id}?autoplay=1&playsinline=1&rel=0&hl=pt-PT`;
+      document.getElementById('titulo-atual').innerText = video.titulo;
+      document.getElementById('link-app').href = `https://youtube.com{video.id}`;
+    }
+
+    function proximoVideo() {
+      const proximo = (indiceAtual + 1) % todosVideos.length;
+      tocarVideo(proximo);
+    }
+
+    iniciarCatalogo();
+  </script>
 </body>
 </html>
+
 
