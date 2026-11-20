@@ -3,40 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>TV Kids PT-PT v5</title>
-</head>
-<body style="background:#111; color:white; font-family:sans-serif; margin:0; padding:15px; text-align:center;">
-
-  <h2 style="color:#ffcc00; margin-top:0;">🇵🇹 TV Kids PT-PT (v5)</h2>
-
-  <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:15px;">
-    <button onclick="mudar('ybN2N_hAf1M')" style="padding:10px; border-radius:10px; background:#ffcc00; border:none; font-weight:bold;">🐼 Panda</button>
-    <button onclick="mudar('iezjtKchChE')" style="padding:10px; border-radius:10px; background:#00a859; color:white; border:none; font-weight:bold;">🎸 Idalécio</button>
-    <button onclick="mudar('DROBhivPdz4')" style="padding:10px; border-radius:10px; background:#e91e63; color:white; border:none; font-weight:bold;">🎀 Nina</button>
-    <button onclick="mudar('M7lc1UVf-VE')" style="padding:10px; border-radius:10px; background:#2196f3; color:white; border:none; font-weight:bold;">🧪 Teste YouTube</button>
-  </div>
-
-  <div style="width:100%; max-width:600px; margin:0 auto; aspect-ratio:16/9; background:#222; border:2px solid #444;">
-    <iframe id="player"
-      style="width:100%; height:100%; border:0;"
-      src="https://youtube.com"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-
-  <p id="status" style="color:#aaa; font-size:13px; margin-top:10px;">A mostrar: Vídeo de Teste Oficial</p>
-
-  <script>
-    function mudar(id) {
-      document.getElementById('player').src = 'https://youtube.com' + id + '?autoplay=1&playsinline=1';
-      document.getElementById('status').innerText = 'A carregar vídeo ID: ' + id;
+  <title>TV Kids PT-PT</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 15px;
     }
-  </script>
+    header {
+      text-align: center;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #ffcc00;
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 22px; margin: 0; color: #ffcc00; }
+    p { font-size: 13px; color: #aaa; margin: 5px 0 0; }
+    h2 {
+      font-size: 18px;
+      margin: 20px 0 10px;
+      color: #fff;
+      border-left: 4px solid #ffcc00;
+      padding-left: 10px;
+    }
+    .grelha {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .cartao {
+      background: #1f1f1f;
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      color: white;
+      border: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+    }
+    .cartao img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      background: #000;
+    }
+    .cartao span {
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1.3;
+    }
+    .aviso {
+      background: #1a2e22;
+      border: 1px solid #00a859;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 15px;
+      color: #d4f7e2;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🇵🇹 TV Kids Segura (PT-PT)</h1>
+    <p>Catálogo fechado sem recomendações externas</p>
+  </header>
+
+  <div class="aviso">
+    💡 <strong>Dica para a TV:</strong> Ao abrir o vídeo no YouTube, desliga o botão <strong>"Reprodução automática"</strong> no topo do vídeo para não passar vídeos PT-BR no final.
+  </div>
+
+  <h2>🐼 Panda e os Caricas</h2>
+  <div class="grelha">
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Dança Panda">
+      <span>Dança Panda</span>
+    </a>
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Em Festa">
+      <span>Panda e os Caricas - Em Festa</span>
+    </a>
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Sem Parar">
+      <span>Sem Parar (Compilação)</span>
+    </a>
+  </div>
+
+  <h2>🎸 Professor Idalécio</h2>
+  <div class="grelha">
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Prof. Idalécio">
+      <span>Vamos Aprender! - Prof. Idalécio</span>
+    </a>
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Canal Prof. Idalécio">
+      <span>📺 Ver todos os vídeos do Prof. Idalécio</span>
+    </a>
+  </div>
+
+  <h2>🎀 Nina Toc Toc</h2>
+  <div class="grelha">
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Nina Toc Toc">
+      <span>Nina Toc Toc - Canção Oficial</span>
+    </a>
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Dança das Letras">
+      <span>Dança Das Letras</span>
+    </a>
+  </div>
+
+  <h2>🐥 V Kids (Vidisco Kids PT)</h2>
+  <div class="grelha">
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="V Kids PT">
+      <span>Músicas Infantis PT-PT - V Kids</span>
+    </a>
+    <a class="cartao" href="https://youtube.com">
+      <img src="https://ytimg.com" alt="Canal V Kids">
+      <span>📺 Ver todos os vídeos V Kids</span>
+    </a>
+  </div>
+
 </body>
 </html>
+
 
 
 
