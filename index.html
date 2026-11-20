@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TV Kids PT-PT</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ffcc00;
+    }
+    h1 {
+      font-size: 18px;
+      margin: 0;
+      color: #ffcc00;
+    }
+    .canais {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      overflow-x: auto;
+      background: #1a1a1a;
+    }
+    button {
+      background-color: #2c2c2c;
+      color: white;
+      border: 2px solid #444;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    button.ativo {
+      background-color: #ffcc00;
+      color: #000;
+      border-color: #ffcc00;
+    }
+    #player-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      background: #000;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    /* Escudo transparente no topo para impedir cliques no título/logo do YouTube que levam para fora */
+    #escudo-topo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      z-index: 10;
+      background: transparent;
+    }
+    .controles {
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      background: #1f1f1f;
+    }
+    .btn-next {
+      background-color: #00a859;
+      border-color: #00a859;
+      font-size: 16px;
+      padding: 10px 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🇵🇹 TV Kids Segura</h1>
+    <span style="font-size: 12px; color: #aaa;">Modo PT-PT</span>
+  </header>
+
+  <div class="canais">
+    <button class="ativo" onclick="mudarCanal('PL94Lw_gOqol3hJ4GTyPAzCVpWP6QEuovO', this)">🐼 Panda e os Caricas</button>
+    <button onclick="mudarCanal('PL9GazwN4CvQ0Ksa4pFy2I3dWTE_mxzQNX', this)">🎸 Prof. Idalécio</button>
+    <button onclick="mudarCanal('PL6Nz8kJ8yTb83RvT2OMe1p6bFDk_7racV', this)">🎀 Nina Toc Toc</button>
+    <button onclick="mudarCanal('UU_g8wP5oE2_G-eS8q1sW_5Q', this)">🐥 V Kids PT</button>
+  </div>
+
+  <div id="player-container">
+    <div id="escudo-topo"></div>
+    <div id="player"></div>
+  </div>
+
+  <div class="controles">
+    <button class="btn-next" onclick="proximoVideo()">⏭️ Próximo Vídeo</button>
+  </div>
+
+  <script>
+    // Carrega a API oficial do YouTube IFrame
+    var tag = document.createElement('script');
+    tag.src = "https://youtube.com";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    var playlistAtual = 'PL94Lw_gOqol3hJ4GTyPAzCVpWP6QEuovO'; // Começa com Panda e os Caricas
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '100%',
+        width: '100%',
+        playerVars: {
+          listType: 'playlist',
+          list: playlistAtual,
+          autoplay: 1,
+          controls: 1,
+          rel: 0,           // Tenta limitar vídeos relacionados ao mesmo canal
+          modestbranding: 1,
+          playsinline: 1,   // Evita abrir o leitor nativo do iPhone fora da app
+          hl: 'pt-PT',
+          cc_lang_pref: 'pt-PT'
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.setShuffle(true); // Baralha os vídeos para não repetir sempre a mesma ordem
+      event.target.playVideoAt(0);
+    }
+
+    function onPlayerStateChange(event) {
+      // Quando um vídeo termina (estado 0), força o próximo da playlist segura
+      if (event.data === YT.PlayerState.ENDED) {
+        player.nextVideo();
+      }
+    }
+
+    function mudarCanal(playlistId, botaoClicado) {
+      // Atualiza visual dos botões
+      document.querySelectorAll('.canais button').forEach(btn => btn.classList.remove('ativo'));
+      botaoClicado.classList.add('ativo');
+
+      // Carrega a nova playlist segura
+      playlistAtual = playlistId;
+      player.loadPlaylist({
+        list: playlistAtual,
+        listType: 'playlist'
+      });
+    }
+
+    function proximoVideo() {
+      if (player && player.nextVideo) {
+        player.nextVideo();
+      }
+    }
+  </script>
+</body>
+</html>
